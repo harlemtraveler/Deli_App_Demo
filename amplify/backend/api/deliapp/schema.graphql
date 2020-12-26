@@ -10,6 +10,7 @@ type Store @model @searchable {
 
 type Product
   @model
+  @searchable
   @auth(
     rules: [
       { allow: owner, identityField: "sub" }
@@ -17,11 +18,13 @@ type Product
     ]
   ) {
   id: ID!
+  name: String!
   description: String!
   store: Store @connection(name: "StoreProducts")
   file: S3Object!
   price: Float!
   delivery: Boolean!
+  tags: [String]
   owner: String
   createdAt: String
 }

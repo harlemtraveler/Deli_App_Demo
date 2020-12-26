@@ -9,9 +9,11 @@ export const onCreateStore = /* GraphQL */ `
       products {
         items {
           id
+          name
           description
           price
           delivery
+          tags
           owner
           createdAt
           updatedAt
@@ -33,9 +35,11 @@ export const onUpdateStore = /* GraphQL */ `
       products {
         items {
           id
+          name
           description
           price
           delivery
+          tags
           owner
           createdAt
           updatedAt
@@ -57,9 +61,11 @@ export const onDeleteStore = /* GraphQL */ `
       products {
         items {
           id
+          name
           description
           price
           delivery
+          tags
           owner
           createdAt
           updatedAt
@@ -77,6 +83,7 @@ export const onCreateProduct = /* GraphQL */ `
   subscription OnCreateProduct {
     onCreateProduct {
       id
+      name
       description
       store {
         id
@@ -96,6 +103,7 @@ export const onCreateProduct = /* GraphQL */ `
       }
       price
       delivery
+      tags
       owner
       createdAt
       updatedAt
@@ -106,6 +114,7 @@ export const onUpdateProduct = /* GraphQL */ `
   subscription OnUpdateProduct {
     onUpdateProduct {
       id
+      name
       description
       store {
         id
@@ -125,6 +134,7 @@ export const onUpdateProduct = /* GraphQL */ `
       }
       price
       delivery
+      tags
       owner
       createdAt
       updatedAt
@@ -135,6 +145,7 @@ export const onDeleteProduct = /* GraphQL */ `
   subscription OnDeleteProduct {
     onDeleteProduct {
       id
+      name
       description
       store {
         id
@@ -154,6 +165,7 @@ export const onDeleteProduct = /* GraphQL */ `
       }
       price
       delivery
+      tags
       owner
       createdAt
       updatedAt

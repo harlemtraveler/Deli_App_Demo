@@ -12,9 +12,11 @@ export const createStore = /* GraphQL */ `
       products {
         items {
           id
+          name
           description
           price
           delivery
+          tags
           owner
           createdAt
           updatedAt
@@ -39,9 +41,11 @@ export const updateStore = /* GraphQL */ `
       products {
         items {
           id
+          name
           description
           price
           delivery
+          tags
           owner
           createdAt
           updatedAt
@@ -66,9 +70,11 @@ export const deleteStore = /* GraphQL */ `
       products {
         items {
           id
+          name
           description
           price
           delivery
+          tags
           owner
           createdAt
           updatedAt
@@ -89,6 +95,7 @@ export const createProduct = /* GraphQL */ `
   ) {
     createProduct(input: $input, condition: $condition) {
       id
+      name
       description
       store {
         id
@@ -108,6 +115,7 @@ export const createProduct = /* GraphQL */ `
       }
       price
       delivery
+      tags
       owner
       createdAt
       updatedAt
@@ -121,6 +129,7 @@ export const updateProduct = /* GraphQL */ `
   ) {
     updateProduct(input: $input, condition: $condition) {
       id
+      name
       description
       store {
         id
@@ -140,6 +149,7 @@ export const updateProduct = /* GraphQL */ `
       }
       price
       delivery
+      tags
       owner
       createdAt
       updatedAt
@@ -153,6 +163,7 @@ export const deleteProduct = /* GraphQL */ `
   ) {
     deleteProduct(input: $input, condition: $condition) {
       id
+      name
       description
       store {
         id
@@ -172,6 +183,7 @@ export const deleteProduct = /* GraphQL */ `
       }
       price
       delivery
+      tags
       owner
       createdAt
       updatedAt
@@ -233,6 +245,7 @@ export const createOrder = /* GraphQL */ `
       id
       product {
         id
+        name
         description
         store {
           id
@@ -249,6 +262,7 @@ export const createOrder = /* GraphQL */ `
         }
         price
         delivery
+        tags
         owner
         createdAt
         updatedAt

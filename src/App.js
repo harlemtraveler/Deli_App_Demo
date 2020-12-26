@@ -17,6 +17,9 @@ import HomePage from "./pages/HomePage";
 //** Component Imports **//
 import AppbarMenu from "./components/layout/AppbarMenu";
 import DrawerMenu from "./components/layout/DrawerMenu";
+import FormCard from "./components/forms/FormCard";
+//** Util Imports **//
+import { handleSignIn, handleSignOut, stringToBoolean } from "./utils";
 
 export const history = createBrowserHistory();
 export const UserContext = React.createContext();
@@ -26,6 +29,35 @@ class App extends Component {
     user: null,
     menuOpen: false,
     expanded: false
+  };
+
+  componentDidMount() {
+    this.getUserData();
+    this.setAuthListener();
+  }
+
+  getUserData = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    user
+      ? this.setState({ user })
+      : this.setState({ user: null });
+    console.log(this.state.user);
+  };
+
+  setAuthListener = async () => {
+    Hub.listen('auth', (data) => {
+      switch (data.payload.event) {
+        case 'signIn':
+          console.log('[!] User signed in.');
+          this.getUserData();
+          break;
+        case 'signOut':
+          console.log('[!] User signed out.');
+          break;
+        default:
+          return;
+      }
+    });
   };
 
   handleDrawerOpen = () => {
@@ -40,19 +72,23 @@ class App extends Component {
     const { user, menuOpen } = this.state;
     const { classes } = this.props;
 
-    return (
-      <Router history={history}>
+    return !user ? (
+      <Authenticator theme={theme} />
+    ) : (
+      <UserContext.Provider value={{ user }}>
+        <Router history={history}>
         <>
           <ThemeProvider theme={themeFont}>
             <CssBaseline />
 
             {/* Appbar */}
             <AppbarMenu
+              user={user}
+              open={menuOpen}
               classes={classes}
               title={"Deli App"}
-              handleDrawerOpen={this.handleDrawerOpen}
-              open={menuOpen}
               position={"fixed"}
+              handleDrawerOpen={this.handleDrawerOpen}
               shiftClass={clsx(classes.appBar, {
                 [classes.appBarShift]: menuOpen,
               })}
@@ -84,6 +120,7 @@ class App extends Component {
           </ThemeProvider>
         </>
       </Router>
+      </UserContext.Provider>
     );
   }
 }
@@ -102,6 +139,12 @@ const styles = theme => ({
   root: {
     display: 'flex',
   },
+  // palette: {
+  //   primary: {
+  //     main: '#344955',
+  //   },
+  //   secondary: '#f9aa33',
+  // },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,

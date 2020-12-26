@@ -27,6 +27,17 @@ export const handleChange = event => {
   });
 };
 
+/***************************
+ * Get User Current Data   *
+ ***************************/
+export const getUserData = async () => {
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+  } catch (err) {
+    console.error('error getting user data', err);
+  }
+};
+
 /********************
  * Handle Sign In   *
  ********************/

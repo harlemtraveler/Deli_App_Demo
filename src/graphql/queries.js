@@ -9,9 +9,11 @@ export const getStore = /* GraphQL */ `
       products {
         items {
           id
+          name
           description
           price
           delivery
+          tags
           owner
           createdAt
           updatedAt
@@ -51,6 +53,7 @@ export const getProduct = /* GraphQL */ `
   query GetProduct($id: ID!) {
     getProduct(id: $id) {
       id
+      name
       description
       store {
         id
@@ -70,6 +73,7 @@ export const getProduct = /* GraphQL */ `
       }
       price
       delivery
+      tags
       owner
       createdAt
       updatedAt
@@ -85,6 +89,7 @@ export const listProducts = /* GraphQL */ `
     listProducts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        name
         description
         store {
           id
@@ -101,6 +106,7 @@ export const listProducts = /* GraphQL */ `
         }
         price
         delivery
+        tags
         owner
         createdAt
         updatedAt
@@ -285,6 +291,48 @@ export const searchStores = /* GraphQL */ `
         products {
           nextToken
         }
+        tags
+        owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+    }
+  }
+`;
+export const searchProducts = /* GraphQL */ `
+  query SearchProducts(
+    $filter: SearchableProductFilterInput
+    $sort: SearchableProductSortInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    searchProducts(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        description
+        store {
+          id
+          name
+          tags
+          owner
+          createdAt
+          updatedAt
+        }
+        file {
+          bucket
+          region
+          key
+        }
+        price
+        delivery
         tags
         owner
         createdAt
