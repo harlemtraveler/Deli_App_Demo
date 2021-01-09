@@ -1,15 +1,19 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Link } from "react-router-dom";
 import { graphqlOperation } from "aws-amplify";
 import { Connect } from "aws-amplify-react";
+import { S3Image } from "aws-amplify-react";
+import { AmplifyS3Image } from "@aws-amplify/ui-react";
 import Card from '@material-ui/core/Card';
 import CheckIcon from '@material-ui/icons/Check';
 import Chip from '@material-ui/core/Chip';
 import DescriptionIcon from '@material-ui/icons/Description';
+import Grid from '@material-ui/core/Grid';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import { Loading } from "element-react";
 import Error from "../Error";
+import Product from "./Product";
 
 const listProducts = /* GraphQL */ `
   query ListProducts(
@@ -48,8 +52,12 @@ const listProducts = /* GraphQL */ `
 `;
 
 const ProductList = ({ searchResults }) => {
+  const [link, setLink] = useState("");
+
   return (
     <Connect query={graphqlOperation(listProducts)}>
+      {/* The below values are interpolated from the above "Connect" API query */}
+      {/* "errors" - is returned as an array */}
       {({ data, loading, errors }) => {
         if (errors.length > 0) return <Error errors={errors} />;
         if (loading || !data.listProducts) return <Loading fullscreen={true} />;
@@ -57,11 +65,16 @@ const ProductList = ({ searchResults }) => {
 
         return (
           <>
-            {products.map(product => (
-              <div key={product.id} className={"my-2"}>
-                {product.name}
-              </div>
-            ))}
+            <Grid container spacing={3} justify={"center"}>
+
+              {products.map(product => (
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                  {console.log(product)}
+                  <Product key={product.id} product={product} />
+                </Grid>
+              ))}
+
+            </Grid>
           </>
         );
       }}

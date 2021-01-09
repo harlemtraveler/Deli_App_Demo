@@ -2,6 +2,7 @@ import React from "react";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import format from 'date-fns/format';
 import parseISO from "date-fns/parseISO";
+import { getUser } from "../graphql/queries";
 
 export const convertDollarsToCents = price => (price * 100).toFixed(0);
 
@@ -28,7 +29,7 @@ export const handleChange = event => {
 };
 
 /***************************
- * Get User Current Data   *
+ * Get Current User Data   *
  ***************************/
 export const getUserData = async () => {
   try {
@@ -83,5 +84,23 @@ export const stringToBoolean = stringy => {
       return false;
     default:
       return Boolean(stringy);
+  }
+};
+
+/*********************
+ * Get S3Image URL   *
+ *********************/
+// export const getS3ImageUrl = async imgkey => {};
+
+/***********************
+ * Get Owner's Email   *
+ ***********************/
+export const getOwnerEmail = async ownerId => {
+  try {
+    const input = { id: ownerId };
+    const result = await API.graphql(graphqlOperation(getUser, input));
+    return result.data.getUser.email;
+  } catch (err) {
+    console.error(`[!] Error fetching product owner's email ${ownerId}`, err);
   }
 };

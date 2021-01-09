@@ -115,6 +115,47 @@ export const listProducts = /* GraphQL */ `
     }
   }
 `;
+export const getPicture = /* GraphQL */ `
+  query GetPicture($id: ID!) {
+    getPicture(id: $id) {
+      id
+      name
+      owner
+      public_url
+      file {
+        bucket
+        region
+        key
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPictures = /* GraphQL */ `
+  query ListPictures(
+    $filter: ModelPictureFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPictures(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        owner
+        public_url
+        file {
+          bucket
+          region
+          key
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
@@ -335,6 +376,37 @@ export const searchProducts = /* GraphQL */ `
         delivery
         tags
         owner
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+    }
+  }
+`;
+export const searchPictures = /* GraphQL */ `
+  query SearchPictures(
+    $filter: SearchablePictureFilterInput
+    $sort: SearchablePictureSortInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    searchPictures(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        owner
+        public_url
+        file {
+          bucket
+          region
+          key
+        }
         createdAt
         updatedAt
       }

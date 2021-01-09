@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import "../../App.css";
 import clsx from 'clsx';
 import { UserContext } from "../../App";
 import { Link } from "react-router-dom";
@@ -123,6 +124,11 @@ export default function Product ({ product }) {
     onClose(e);
   };
 
+  const onDelete = e => {
+    handleDeleteProduct();
+    onClose(e);
+  };
+
   const onClose = e => {
     if (e.currentTarget.textContent === 'Source URL') {
       // TODO: Add a trigger to copy source url to clipboard
@@ -132,10 +138,11 @@ export default function Product ({ product }) {
 
   // TODO: declare State[s] here (i.e. 'useState')
   const classes = useStyles();
+  const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [publicBucket, setPublicBucket] = useState("deliapp-image-bucket-public-access-tk01052021");
   const [price, setPrice] = useState(null);
-  const [url, setUrl] = useState("");
   const [liked, setLiked] = useState(false);
   const [shared, setShared] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -143,10 +150,11 @@ export default function Product ({ product }) {
   const [updateDialog, setUpdateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
+  // TODO: update below list to enable Delete functionality
   const [items, setItems] = useState([
     { name: "Source URL", onClick: onClose },
     { name: "Edit", onClick: onSettings, disabled: true },
-    { name: "Delete", onClick: onClose, disabled: true }
+    { name: "Delete", onClick: onDelete, disabled: true }
   ]);
 
   const handleDialogOpen = () => {
@@ -175,6 +183,7 @@ export default function Product ({ product }) {
     }
   };
 
+  // TODO: Create a prompt when a DELETE is triggered
   const handleDeleteProduct = async productId => {
     try {
       setDeleteDialog(false);
@@ -186,6 +195,19 @@ export default function Product ({ product }) {
     } catch (err) {
       console.error(`[!] Failed to delete product with id: ${productId} `, err);
     }
+  };
+
+  //"https://" + {bucket} + ".s3.amazonaws.com/" + {key}
+
+  const getObjPublicUrl = objKey => {
+    return `https://${publicBucket}.s3.amazonaws.com/public/${objKey}`;
+  };
+
+  const formatImage = async img => {
+    return {
+      id: img.id,
+      src: await Storage.get(img)
+    };
   };
 
   const getFormatProductDate = date => {
@@ -208,7 +230,7 @@ export default function Product ({ product }) {
   return (
     <UserContext.Consumer>
       {({ user }) => {
-        const isProductOwner = user && user.sub === product.owner;
+        const isProductOwner = user && user.attributes.sub === product.owner;
         const isEmailVerified = user && user.email_verified;
 
         return (
@@ -257,7 +279,7 @@ export default function Product ({ product }) {
               <CardMedia
                 title={'Product Image'}
                 className={classes.media}
-                image={"https://source.unsplash.com/random"}
+                image={getObjPublicUrl(product.file.key)}
               />
               <CardContent>
                 <Typography variant={'body1'}>

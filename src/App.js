@@ -10,6 +10,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
 //** Font Imports **//
+// Stripe imports
+import { loadStripe } from "@stripe/stripe-js/pure";
+import { Elements } from "@stripe/react-stripe-js";
 import "fontsource-merriweather";
 import "fontsource-libre-franklin";
 //** Page Imports **//
@@ -20,6 +23,7 @@ import DrawerMenu from "./components/layout/DrawerMenu";
 import FormCard from "./components/forms/FormCard";
 //** Util Imports **//
 import { handleSignIn, handleSignOut, stringToBoolean } from "./utils";
+// import config from './config';
 
 export const history = createBrowserHistory();
 export const UserContext = React.createContext();
@@ -28,12 +32,13 @@ class App extends Component {
   state ={
     user: null,
     menuOpen: false,
-    expanded: false
+    expanded: false,
   };
 
   componentDidMount() {
     this.getUserData();
     this.setAuthListener();
+    // console.log(config);
   }
 
   getUserData = async () => {

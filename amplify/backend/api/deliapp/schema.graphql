@@ -11,17 +11,19 @@ type Store @model @searchable {
 type Product
   @model
   @searchable
-  @auth(
-    rules: [
-      { allow: owner, identityField: "sub" }
-      { allow: private, operations: [read] }
-    ]
-  ) {
+#  @auth(
+#    rules: [
+#      { allow: owner, identityField: "sub" }
+#      { allow: private, operations: [read] }
+#    ]
+#  )
+  {
   id: ID!
   name: String!
   description: String!
   store: Store @connection(name: "StoreProducts")
   file: S3Object!
+#  images: [Picture] @connection(name: "ProductPictures")
   price: Float!
   delivery: Boolean!
   tags: [String]
@@ -33,6 +35,17 @@ type S3Object {
   bucket: String!
   region: String!
   key: String!
+}
+
+type Picture
+  @model
+  @searchable
+  {
+  id: ID!
+  name: String
+  owner: String
+  public_url: String
+  file: S3Object
 }
 
 type User

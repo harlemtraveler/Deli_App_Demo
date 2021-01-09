@@ -291,3 +291,8 @@ body {
     display: none;
   }
 }
+
+amplify-s3-image {
+  --height: 200px;
+  --width: 400px;
+}

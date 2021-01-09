@@ -4,7 +4,7 @@ import aws_exports from '../../aws-exports';
 //** Amplify & GraphQL Imports **//
 import { Storage, Auth, API, graphqlOperation } from "aws-amplify";
 import { PhotoPicker } from "aws-amplify-react";
-import { createProduct } from "../../graphql/mutations";
+import { createProduct, createPicture } from "../../graphql/mutations";
 //** MaterialUI Imports **//
 import { withStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
@@ -22,17 +22,17 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
 const initialState = {
-  name: "",
-  store: "",
-  price: "",
-  owner: "",
-  image: "",
-  description: "",
-  imagePreview: "",
+  name: '',
+  store: '',
+  price: '',
+  owner: '',
+  image: '',
+  description: '',
+  imagePreview: '',
+  publicBucket: "deliapp-image-bucket-public-access-tk01052021",
   delivery: false,
   isUploading: false,
   addProductDialog: false,
-  file: {},
   options: [],
   selectedTags: [],
   tags: [
@@ -42,19 +42,46 @@ const initialState = {
     "Sides",
     "Salads",
     "Vegan"
-  ],
+  ]
 };
 
 class NewProduct extends Component {
   state = { ...initialState };
 
+  addImageToDB = async (name, owner, img, key) => {
+    console.log('[+] Add image to DB.');
+    try {
+      const photo = {
+        name: name,
+        owner: owner,
+        public_url: `https://${this.state.publicBucket}.s3.amazonaws.com/public/${key}`,
+        file: img
+      };
+      await API.graphql(graphqlOperation(createPicture, { input: photo }));
+      console.log('[+] Add image success!')
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  makePublicCopyImage = async (name, photo) => {
+    return await Storage.put(name, photo.file, {
+      contentType: photo.type,
+      level: 'public',
+      bucket: "deliapp-image-bucket-public-access-tk01052021",
+      progressCallback: progress => {
+        console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
+      }
+    });
+  };
+
   handleAddProduct = async () => {
     try {
       this.setState({ isUploading: true });
       const visibility = 'public';
-      const { indentityId } = await Auth.currentCredentials();
+      const { identityId } = await Auth.currentCredentials();
       const { username } = await Auth.currentUserInfo();
-      const filename = `/${visibility}/${indentityId}/${Date.now()}-${this.state.image.name()}`;
+      const filename = `/${visibility}/${identityId}/${Date.now()}-${this.state.image.name}`;
       const uploadedFile = await Storage.put(filename, this.state.image.file, {
         contentType: this.state.image.type,
         progressCallback: progress => {
@@ -63,11 +90,23 @@ class NewProduct extends Component {
           this.setState({ percentUploaded });
         }
       });
+      console.log(uploadedFile);
+
+      // this creates a publicly accessible copy of the image file in a separate S3 bucket
+      const uploadedPublicFile = await this.makePublicCopyImage(filename, this.state.image);
+      console.log(uploadedPublicFile);
+
+      // TODO: Where is the best place to insert the "addImageToDB()" function call?...after the "file" var declaration?
+      // THIS IS WHERE REF CODE EXEC CMD: to add image to DynamoDB (*addImageToDB(...))
+
       const file = {
         key: uploadedFile.key,
         bucket: aws_exports.aws_user_files_s3_bucket,
         region: aws_exports.aws_user_files_s3_bucket_region
       };
+
+      await this.addImageToDB(filename, username, file, file.key);
+
       const input = {
         owner: username,
         name: this.state.name,
@@ -77,6 +116,7 @@ class NewProduct extends Component {
         tags: this.state.selectedTags,
         file
       };
+
       const result = await API.graphql(graphqlOperation(createProduct, { input }));
       console.log(result);
       console.info(`Created product id: ${result.data.createProduct.id}`);
