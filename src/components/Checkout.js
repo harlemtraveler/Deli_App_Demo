@@ -127,7 +127,6 @@ const Checkout = ({ product, user }) => {
     const cardElement = elements.getElement('card');
 
     try {
-      // TODO: Add form submission logic here...
       const ownerEmail = await getOwnerEmail(product.owner);
       const body = {
         currency: 'usd',
@@ -174,8 +173,6 @@ const Checkout = ({ product, user }) => {
           phone: '18666666666'
         }
       };
-      // TODO: Create a new API & Lambda to perform the card charge logic,
-      //  then make a POST request passing it the "body" Obj as parameter.
       const result = await API.post('chargeAPI', '/charge', { body });
       const client_secret = result.clientSecret;
 

@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 // Material-UI Imports
 import Grid from '@material-ui/core/Grid';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -22,12 +21,6 @@ export default function HomePage() {
     <>
       <main>
         <h1>Deli App</h1>
-
-        <span>
-          <Link className={'link'} to={'/checkout'}>
-            View test checkout form
-          </Link>
-        </span>
 
         <Grid container spacing={5} className={classes.mainGrid}>
           <Main title={"Main Content Component"} />

@@ -148,10 +148,10 @@ export default function Product ({ product }) {
   // TODO: declare State[s] here (i.e. 'useState')
   const classes = useStyles();
   const [url, setUrl] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState(product.name || '');
+  const [description, setDescription] = useState(product.description || '');
   const [publicBucket, setPublicBucket] = useState("deliapp-image-bucket-public-access-tk01052021");
-  const [price, setPrice] = useState(null);
+  const [price, setPrice] = useState(product.price || null);
   const [liked, setLiked] = useState(false);
   const [shared, setShared] = useState(false);
   const [checkout, setCheckout] = useState(false);
@@ -180,10 +180,10 @@ export default function Product ({ product }) {
       setUpdateDialog(false);
       const input = {
         id: productId,
-        name,
-        description,
-        price,
-        url
+        name: name,
+        description: description,
+        price: convertDollarsToCents(price),
+        // url
       };
       const result = await API.graphql(graphqlOperation(updateProduct, { input }));
       console.log(result);
@@ -328,7 +328,7 @@ export default function Product ({ product }) {
                 {/*    })}*/}
                 {/*  />*/}
                 {/*</IconButton>*/}
-                <Checkout product={product.id} user={user} />
+                <Checkout product={product} user={user} />
                 <IconButton
                   aria-label={'show more'}
                   aria-expanded={expanded}
@@ -390,7 +390,8 @@ export default function Product ({ product }) {
                   margin={'normal'}
                   variant={'filled'}
                   style={{ margin: 8 }}
-                  placeholder={'Product Name'}
+                  defaultValue={name}
+                  placeholder={name}
                   onChange={e => setName(e.target.value)}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -407,7 +408,8 @@ export default function Product ({ product }) {
                   margin={'normal'}
                   variant={'filled'}
                   style={{ margin: 8 }}
-                  placeholder={'Product Description'}
+                  defaultValue={description}
+                  placeholder={description}
                   onChange={e => setDescription(e.target.value)}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -417,38 +419,47 @@ export default function Product ({ product }) {
                   required
                   fullWidth
                   id={'price'}
+                  // TODO: find a way to display value in "$0.00" format to prevent confusion
                   value={price}
                   name={'price'}
                   label={'Price'}
+                  type={'number'}
                   margin={'normal'}
                   variant={'filled'}
                   style={{ margin: 8 }}
-                  placeholder={'Product Price'}
+                  defaultValue={convertCentsToDollars(price)}
+                  placeholder={convertCentsToDollars(price)}
                   onChange={e => setPrice(e.target.value)}
                   InputLabelProps={{ shrink: true }}
                 />
 
                 {/* Product URL Field */}
-                <TextField
-                  fullWidth
-                  id={'url'}
-                  value={url}
-                  name={'url'}
-                  label={'URL'}
-                  margin={'normal'}
-                  variant={'filled'}
-                  style={{ margin: 8 }}
-                  placeholder={'http://myProductURL.com'}
-                  onChange={e => setUrl(e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                />
+                {/*<TextField*/}
+                {/*  fullWidth*/}
+                {/*  id={'url'}*/}
+                {/*  value={url}*/}
+                {/*  name={'url'}*/}
+                {/*  label={'URL'}*/}
+                {/*  margin={'normal'}*/}
+                {/*  variant={'filled'}*/}
+                {/*  style={{ margin: 8 }}*/}
+                {/*  // defaultValue={product.url}*/}
+                {/*  placeholder={'http://myProductURL.com'}*/}
+                {/*  onChange={e => setUrl(e.target.value)}*/}
+                {/*  InputLabelProps={{ shrink: true }}*/}
+                {/*/>*/}
 
               </DialogContent>
 
               {/* Dialog Buttons */}
               <DialogActions>
                 <Button color={'secondary'} onClick={handleDialogClose}>Cancel</Button>
-                <Button color={'primary'} onClick={handleUpdateProduct}>Update</Button>
+                <Button
+                  color={'primary'}
+                  onClick={() => handleUpdateProduct(product.id)}
+                >
+                  Update
+                </Button>
               </DialogActions>
             </Dialog>
           </>
