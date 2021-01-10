@@ -33,6 +33,8 @@ import {
   DialogActions,
   DialogContentText
 } from '@material-ui/core';
+// Element React Imports
+import { Notification, Message } from 'element-react';
 // Stripe imports
 import {
   Elements,
@@ -48,8 +50,11 @@ import {
   createShippingAddress,
   convertCentsToDollars
 } from '../utils';
+import emailHandler from '../utils/emailHandler';
+// GraphQL Imports
+import { createOrder } from '../graphql/mutations';
 // Component Imports
-import { history } from "../App";
+import { history } from '../App';
 
 const awsconfig = {
   accessKeyId: config.awsConfig.accessKeyId,
@@ -64,13 +69,13 @@ const Checkout = ({ product, user }) => {
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [shippingName, setShippingName] = useState("");
+  const [shippingName, setShippingName] = useState('');
   const [address, setAddress] = useState({
     line1: null,
     line2: null,
     city: null,
     state: null,
-    country: "US",
+    country: 'US',
     postal_code: null
   });
   const [shipping, setShipping] = useState({
@@ -121,7 +126,7 @@ const Checkout = ({ product, user }) => {
     e.preventDefault();
     setProcessing(true);
 
-    const cardElement = elements.getElement("card");
+    const cardElement = elements.getElement('card');
 
     try {
       // TODO: Add form submission logic here...
@@ -172,9 +177,83 @@ const Checkout = ({ product, user }) => {
         }
       };
       // TODO: Create a new API & Lambda to perform the card charge logic,
-      //  then make POST req passing it the "body" Obj as parameter.
+      //  then make a POST request passing it the "body" Obj as parameter.
+      const result = await API.post('chargeAPI', '/charge', { body });
+      const client_secret = result.clientSecret;
+
+      // format the shipping address
+      let shippingAddress = null;
+      if (product.delivery) {
+        shippingAddress = await createShippingAddress(body);
+      };
+
+      // create the stripe PaymentMethod via the Stripe sdk
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name: body.charge.billing_details.name,
+          email: body.charge.billing_details.email,
+          address: body.charge.billing_details.address
+        }
+      });
+
+      // initiate the stripe Payment Intent process
+      if (!error) {
+        try {
+          const { id } = paymentMethod;
+          const { paymentIntent: paymentIntentObj } = await stripe.confirmCardPayment(client_secret, { payment_method: id });
+          const { error, status } = paymentIntentObj;
+
+          if (status === 'succeeded') {
+            const input = {
+              orderUserId: user.attributes.sub,
+              orderProductId: product.id,
+              shippingAddress: {
+                city: body.shipping.address.city,
+                country: body.shipping.address.country,
+                address_line1: body.shipping.address.line1,
+                address_state: body.shipping.address.state,
+                address_zip: body.shipping.address.postal_code
+              }
+            };
+
+            const order = await API.graphql(graphqlOperation(createOrder, { input }));
+
+            Notification({
+              title: 'Success',
+              message: `Payment Successful!`,
+              type: 'success',
+              duration: 3000
+            });
+
+            setTimeout(() => {
+              history.push('/');
+              Message({
+                type:'info',
+                message: 'Check your verified email for order details.',
+                duration: 5000,
+                showClose: true
+              });
+            }, 3000);
+          }
+
+          if (!error) {
+            // TODO: remove the "console.log()" below in prod
+            console.log({ body });
+            const sendEmail = await emailHandler(body);
+            sendEmail ? console.log('[+] Email handler success!') : console.error(sendEmail);
+            toggleDialog();
+          }
+
+        } catch (err) {
+          console.error('[!] Error when confirming payment.', err);
+        }
+      }
+
     } catch (err) {
-      console.error(err);
+      console.error('[!] Error when checking out.', err);
+      setProcessing(false);
     }
   };
 

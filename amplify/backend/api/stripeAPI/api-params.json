@@ -1,0 +1,41 @@
+{
+    "paths": [
+        {
+            "name": "/charge",
+            "lambdaFunction": "stripeLambda",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH"
+                ]
+            },
+            "policyResourceName": "/charge"
+        }
+    ],
+    "resourceName": "stripeAPI",
+    "apiName": "stripeAPI",
+    "functionArns": [
+        {
+            "lambdaFunction": "stripeLambda"
+        }
+    ],
+    "privacy": {
+        "auth": 1,
+        "unauth": 0,
+        "authRoleName": "amplify-deliapp-dev-183242-authRole",
+        "unAuthRoleName": "amplify-deliapp-dev-183242-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "stripeLambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

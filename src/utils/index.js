@@ -92,6 +92,19 @@ export const stringToBoolean = stringy => {
  *********************/
 // export const getS3ImageUrl = async imgkey => {};
 
+/*****************************
+ * Create Shipping Address   *
+ *****************************/
+export const createShippingAddress = async source => ({
+  name: source.shipping.name.name,
+  email: source.charge.billing_details.email,
+  line1: source.shipping.address.line1,
+  city: source.shipping.address.city,
+  address_state: source.shipping.address.state,
+  country: source.shipping.address.country,
+  address_zip: source.shipping.address.postal_code
+});
+
 /***********************
  * Get Owner's Email   *
  ***********************/

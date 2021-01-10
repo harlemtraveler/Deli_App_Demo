@@ -21,11 +21,14 @@ import HomePage from "./pages/HomePage";
 import AppbarMenu from "./components/layout/AppbarMenu";
 import DrawerMenu from "./components/layout/DrawerMenu";
 import FormCard from "./components/forms/FormCard";
+// ENV Imports
+import config from './config';
 //** Util Imports **//
 import { handleSignIn, handleSignOut, stringToBoolean } from "./utils";
 // import config from './config';
 
 export const history = createBrowserHistory();
+const stripePromise = loadStripe(config.stripeConfig.pubKey);
 export const UserContext = React.createContext();
 
 class App extends Component {
@@ -80,52 +83,54 @@ class App extends Component {
     return !user ? (
       <Authenticator theme={theme} />
     ) : (
-      <UserContext.Provider value={{ user }}>
-        <Router history={history}>
-        <>
-          <ThemeProvider theme={themeFont}>
-            <CssBaseline />
+      <Elements stripe={stripePromise}>
+        <UserContext.Provider value={{ user }}>
+          <Router history={history}>
+            <>
+              <ThemeProvider theme={themeFont}>
+                <CssBaseline />
 
-            {/* Appbar */}
-            <AppbarMenu
-              user={user}
-              open={menuOpen}
-              classes={classes}
-              title={"Deli App"}
-              position={"fixed"}
-              handleDrawerOpen={this.handleDrawerOpen}
-              shiftClass={clsx(classes.appBar, {
-                [classes.appBarShift]: menuOpen,
-              })}
-            />
+                {/* Appbar */}
+                <AppbarMenu
+                  user={user}
+                  open={menuOpen}
+                  classes={classes}
+                  title={"Deli App"}
+                  position={"fixed"}
+                  handleDrawerOpen={this.handleDrawerOpen}
+                  shiftClass={clsx(classes.appBar, {
+                    [classes.appBarShift]: menuOpen,
+                  })}
+                />
 
-            {/* Drawer */}
-            <DrawerMenu
-              classes={classes}
-              open={menuOpen}
-              handleDrawerClose={this.handleDrawerClose}
-            />
+                {/* Drawer */}
+                <DrawerMenu
+                  classes={classes}
+                  open={menuOpen}
+                  handleDrawerClose={this.handleDrawerClose}
+                />
 
-            {/* Page Main Body */}
-            <main
-              className={clsx(classes.content, {
-                [classes.contentShift]: menuOpen,
-              })}
-            >
-              <div className={classes.drawerHeader} />
+                {/* Page Main Body */}
+                <main
+                  className={clsx(classes.content, {
+                    [classes.contentShift]: menuOpen,
+                  })}
+                >
+                  <div className={classes.drawerHeader} />
 
-              {/* Routes */}
-              <div className={"app-container"}>
-                <Route exact path={"/"} component={HomePage} />
-                {/*<Route path={"/profile"} component={() => (*/}
-                {/*//  TODO: add a Profile component*/}
-                {/*)} />*/}
-              </div>
-            </main>
-          </ThemeProvider>
-        </>
-      </Router>
-      </UserContext.Provider>
+                  {/* Routes */}
+                  <div className={"app-container"}>
+                    <Route exact path={"/"} component={HomePage} />
+                    {/*<Route path={"/profile"} component={() => (*/}
+                    {/*//  TODO: add a Profile component*/}
+                    {/*)} />*/}
+                  </div>
+                </main>
+              </ThemeProvider>
+            </>
+          </Router>
+        </UserContext.Provider>
+      </Elements>
     );
   }
 }
