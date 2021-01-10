@@ -9,7 +9,9 @@ import { Storage, API, graphqlOperation } from "aws-amplify";
  * Material UI Component Imports *
 **********************************/
 import { makeStyles } from '@material-ui/core/styles';
-import {red, grey, blue} from "@material-ui/core/colors";
+import { red, grey, blue, green } from "@material-ui/core/colors";
+// Component Imports
+import Checkout from "../Checkout";
 // MUI Card Component
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -23,6 +25,7 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 // MUI Menu Component
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -111,6 +114,12 @@ const useStyles = makeStyles((theme) => ({
   iconShared: {
     color: blue[700],
   },
+  iconCheckoutFalse: {
+    color: grey[700],
+  },
+  iconCheckoutTrue: {
+    color: green[700],
+  },
 }));
 
 
@@ -145,6 +154,7 @@ export default function Product ({ product }) {
   const [price, setPrice] = useState(null);
   const [liked, setLiked] = useState(false);
   const [shared, setShared] = useState(false);
+  const [checkout, setCheckout] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [updateDialog, setUpdateDialog] = useState(false);
@@ -227,6 +237,10 @@ export default function Product ({ product }) {
     setShared(!shared);
   };
 
+  const handleCheckout = () => {
+    setCheckout(!checkout);
+  };
+
   return (
     <UserContext.Consumer>
       {({ user }) => {
@@ -305,6 +319,16 @@ export default function Product ({ product }) {
                     })}
                   />
                 </IconButton>
+                {/* TODO: finish wiring the Checkout component into the Product card - 10JAN2021 */}
+                {/*<IconButton aria-label={'share'}>*/}
+                {/*  <ShoppingCartIcon*/}
+                {/*    onClick={handleCheckout}*/}
+                {/*    className={clsx(classes.iconCheckoutFalse, {*/}
+                {/*      [classes.iconCheckoutTrue]: checkout*/}
+                {/*    })}*/}
+                {/*  />*/}
+                {/*</IconButton>*/}
+                <Checkout product={product.id} user={user} />
                 <IconButton
                   aria-label={'show more'}
                   aria-expanded={expanded}

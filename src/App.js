@@ -9,10 +9,10 @@ import { Authenticator, AmplifyTheme, withAuthenticator } from "aws-amplify-reac
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
-//** Font Imports **//
 // Stripe imports
 import { loadStripe } from "@stripe/stripe-js/pure";
 import { Elements } from "@stripe/react-stripe-js";
+// Font Imports
 import "fontsource-merriweather";
 import "fontsource-libre-franklin";
 //** Page Imports **//
@@ -25,7 +25,6 @@ import FormCard from "./components/forms/FormCard";
 import config from './config';
 //** Util Imports **//
 import { handleSignIn, handleSignOut, stringToBoolean } from "./utils";
-// import config from './config';
 
 export const history = createBrowserHistory();
 const stripePromise = loadStripe(config.stripeConfig.pubKey);
@@ -36,12 +35,12 @@ class App extends Component {
     user: null,
     menuOpen: false,
     expanded: false,
+    testProduct: {}
   };
 
   componentDidMount() {
     this.getUserData();
     this.setAuthListener();
-    // console.log(config);
   }
 
   getUserData = async () => {

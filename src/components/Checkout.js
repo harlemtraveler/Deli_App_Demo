@@ -14,12 +14,10 @@ import {
   purple
 } from '@material-ui/core/colors';
 // Material UI Icons
-import {
-  PaymentRoundedIcon,
-  AttachMoneyRoundedIcon,
-  MonetizationOnRoundedIcon,
-  CancelPresentationRoundedIcon
-} from '@material-ui/icons';
+import PaymentRoundedIcon from '@material-ui/icons/PaymentRounded';
+import AttachMoneyRoundedIcon from '@material-ui/icons/AttachMoneyRounded';
+import MonetizationOnRoundedIcon from '@material-ui/icons/MonetizationOnRounded';
+import CancelPresentationRoundedIcon from '@material-ui/icons/CancelPresentationRounded';
 // Material UI Core
 import {
   Grid,
@@ -43,7 +41,7 @@ import {
   useElements
 } from '@stripe/react-stripe-js';
 // ENV Imports
-import config from './config';
+import config from '../config';
 // Util Imports
 import {
   getOwnerEmail,
