@@ -71,7 +71,7 @@ type Order
   product: Product @connection
   user: User @connection(name: "UserOrders")
   deliveryAddress: DeliveryAddress,
-  order_status: Status!
+  order_status: String!
   createdAt: String
 }
 

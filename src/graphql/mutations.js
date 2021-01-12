@@ -263,6 +263,7 @@ export const registerUser = /* GraphQL */ `
       orders {
         items {
           id
+          order_status
           createdAt
           updatedAt
         }
@@ -286,6 +287,7 @@ export const updateUser = /* GraphQL */ `
       orders {
         items {
           id
+          order_status
           createdAt
           updatedAt
         }
@@ -345,11 +347,7 @@ export const createOrder = /* GraphQL */ `
         address_state
         address_zip
       }
-      order_status {
-        pending
-        cancelled
-        complete
-      }
+      order_status
       createdAt
       updatedAt
     }

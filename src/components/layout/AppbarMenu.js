@@ -14,7 +14,7 @@ import {Auth} from "aws-amplify";
 import FormCard from "../forms/FormCard";
 
 export default function AppbarMenu (props) {
-  const { classes, title, handleDrawerOpen, open, user, position, shiftClass } = props;
+  const { classes, title, handleDrawerOpen, open, user, position, shiftClass, handleSignout } = props;
 
   return (
     <>
@@ -74,7 +74,7 @@ export default function AppbarMenu (props) {
           <Button
             size={"small"}
             variant={"outlined"}
-            onClick={() => {}}
+            onClick={handleSignout}
           >
             {user ? "Sign Out" : "Sign In"}
           </Button>

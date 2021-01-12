@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 import clsx from "clsx";
-import {API, Auth, graphqlOperation, Hub} from "aws-amplify";
-import { Router, Route } from "react-router-dom";
-import { createBrowserHistory } from "history";
-import { Authenticator, AmplifyTheme, withAuthenticator } from "aws-amplify-react";
+import {API, Auth, graphqlOperation, Hub} from 'aws-amplify';
+import { Router, Route } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import { Authenticator, AmplifyTheme, withAuthenticator } from 'aws-amplify-react';
 //** MaterialUI Imports **//
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { withTheme, withStyles } from "@material-ui/core/styles";
@@ -15,6 +15,9 @@ import { Elements } from "@stripe/react-stripe-js";
 // Font Imports
 import "fontsource-merriweather";
 import "fontsource-libre-franklin";
+// GraphQL Imports
+import { getUser } from './graphql/queries';
+import { registerUser } from './graphql/mutations';
 //** Page Imports **//
 import HomePage from "./pages/HomePage";
 //** Component Imports **//
@@ -35,12 +38,11 @@ class App extends Component {
     user: null,
     menuOpen: false,
     expanded: false,
-    testProduct: {}
   };
 
   componentDidMount() {
     this.getUserData();
-    this.setAuthListener();
+    Hub.listen("auth", this, "onHubCapsule");
   }
 
   getUserData = async () => {
@@ -51,20 +53,55 @@ class App extends Component {
     console.log(this.state.user);
   };
 
-  setAuthListener = async () => {
-    Hub.listen('auth', (data) => {
-      switch (data.payload.event) {
-        case 'signIn':
-          console.log('[!] User signed in.');
-          this.getUserData();
-          break;
-        case 'signOut':
-          console.log('[!] User signed out.');
-          break;
-        default:
-          return;
+  onHubCapsule = capsule => {
+    switch (capsule.payload.event) {
+      case 'signIn':
+        console.log('[!] User signed in.');
+        this.getUserData();
+        this.registerNewUser(capsule.payload.data);
+        break;
+      case 'signUp':
+        console.log('signed up');
+        break;
+      case 'signOut':
+        console.log('[!] User signed out.');
+        this.setState({ user: null });
+        break;
+      default:
+        return;
+    }
+  };
+
+  registerNewUser = async signInData => {
+    const getUserInput = {
+      id: signInData.signInUserSession.idToken.payload.sub
+    };
+    const { data } = await API.graphql(graphqlOperation(getUser, getUserInput));
+
+    if (!data.getUser) {
+      try {
+        const registerUserInput = {
+          ...getUserInput,
+          username: signInData.username,
+          email: signInData.signInUserSession.idToken.payload.email,
+          registered: true
+        };
+        const newUser = await API.graphql(
+          graphqlOperation(registerUser, { input: registerUserInput })
+        );
+        console.log({ newUser });
+      } catch (err) {
+        console.error('[!] Error registering new user.', err);
       }
-    });
+    }
+  };
+
+  handleSignout = async () => {
+    try {
+      Auth.signOut();
+    } catch (err) {
+      console.error('[!] Error signing out user.', err);
+    }
   };
 
   handleDrawerOpen = () => {
@@ -96,6 +133,7 @@ class App extends Component {
                   classes={classes}
                   title={"Deli App"}
                   position={"fixed"}
+                  handleSignout={this.handleSignout}
                   handleDrawerOpen={this.handleDrawerOpen}
                   shiftClass={clsx(classes.appBar, {
                     [classes.appBarShift]: menuOpen,

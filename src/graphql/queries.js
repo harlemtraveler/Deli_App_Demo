@@ -166,6 +166,7 @@ export const getUser = /* GraphQL */ `
       orders {
         items {
           id
+          order_status
           createdAt
           updatedAt
         }

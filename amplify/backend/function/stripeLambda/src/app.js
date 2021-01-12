@@ -90,7 +90,7 @@ app.post('/charge', async (req, res) => {
         line2: shippingLine2 || null,
         city: shippingCity || null,
         state: shippingState || null,
-        country: shippingCountry,
+        country: shippingCountry || 'US',
         postal_code: shippingZip || null
       },
       name: name,
@@ -102,7 +102,7 @@ app.post('/charge', async (req, res) => {
   });
 
   res.send({
-    clientSecret: paymentIntent.clientSecret
+    clientSecret: paymentIntent.client_secret
   });
 });
 

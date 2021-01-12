@@ -122,6 +122,8 @@ const Checkout = ({ product, user }) => {
   *************************/
   const handleFormSubmit = async e => {
     e.preventDefault();
+    console.log('[+] Form submit successfully triggers handleFormSubmit().');
+    console.log('[+] Current value of the "processing" State property', processing);
     setProcessing(true);
 
     const cardElement = elements.getElement('card');
@@ -141,7 +143,7 @@ const Checkout = ({ product, user }) => {
               line2: '',
               city: '',
               state: '',
-              country: '',
+              country: 'US',
               postal_code: ''
             },
             name: user.attributes.sub,
@@ -173,13 +175,16 @@ const Checkout = ({ product, user }) => {
           phone: '18666666666'
         }
       };
-      const result = await API.post('chargeAPI', '/charge', { body });
+      const result = await API.post('stripeAPI', '/charge', { body });
+      console.log(result);
       const client_secret = result.clientSecret;
+      console.log(client_secret);
 
       // format the shipping address
       let shippingAddress = null;
       if (product.delivery) {
         shippingAddress = await createShippingAddress(body);
+        console.log(shippingAddress);
       };
 
       // create the stripe PaymentMethod via the Stripe sdk
@@ -204,13 +209,14 @@ const Checkout = ({ product, user }) => {
             const input = {
               orderUserId: user.attributes.sub,
               orderProductId: product.id,
-              shippingAddress: {
+              deliveryAddress: {
                 city: body.shipping.address.city,
                 country: body.shipping.address.country,
                 address_line1: body.shipping.address.line1,
                 address_state: body.shipping.address.state,
                 address_zip: body.shipping.address.postal_code
-              }
+              },
+              order_status: 'paid'
             };
 
             const order = await API.graphql(graphqlOperation(createOrder, { input }));

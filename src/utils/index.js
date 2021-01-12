@@ -112,6 +112,7 @@ export const getOwnerEmail = async ownerId => {
   try {
     const input = { id: ownerId };
     const result = await API.graphql(graphqlOperation(getUser, input));
+    console.log(result);
     return result.data.getUser.email;
   } catch (err) {
     console.error(`[!] Error fetching product owner's email ${ownerId}`, err);
