@@ -55,7 +55,7 @@ export const emailHandler = async chargeObj => {
           Charset: 'UTF-8',
           Data: `
           <h3>Order Processed</h3>
-          <p><span>${description}</span> - $${convertCentsToDollars(amount)} - (${currency.toUpperCase()})</p>
+          <p><span style="font-weight: bold"">${description}</span> - $${convertCentsToDollars(amount)} - (${currency.toUpperCase()})</p>
           
           <p>Customer Email: ${customerEmail}</p>
           <p>Contact your seller: <a href="mailto:${ownerEmail}">${ownerEmail}</a></p>
@@ -69,7 +69,7 @@ export const emailHandler = async chargeObj => {
             ` : 'Ordered for takeout'
           }
           
-          <p>${
+          <p style="font-style: italic; color: grey;"">${
             delivery ? 
               'Your order is being prepared and will be delivered soon!' 
               : 'Your takeout order is being prepared and will be ready for pickup soon!'
