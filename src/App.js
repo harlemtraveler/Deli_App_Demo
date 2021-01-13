@@ -19,15 +19,16 @@ import "fontsource-libre-franklin";
 import { getUser } from './graphql/queries';
 import { registerUser } from './graphql/mutations';
 //** Page Imports **//
-import HomePage from "./pages/HomePage";
+import HomePage from './pages/HomePage';
 //** Component Imports **//
-import AppbarMenu from "./components/layout/AppbarMenu";
-import DrawerMenu from "./components/layout/DrawerMenu";
-import FormCard from "./components/forms/FormCard";
+import AppbarMenu from './components/layout/AppbarMenu';
+import DrawerMenu from './components/layout/DrawerMenu';
+import ProfilePage from './pages/ProfilePage';
+import FormCard from './components/forms/FormCard';
 // ENV Imports
 import config from './config';
 //** Util Imports **//
-import { handleSignIn, handleSignOut, stringToBoolean } from "./utils";
+import { handleSignIn, handleSignOut, stringToBoolean } from './utils';
 
 export const history = createBrowserHistory();
 const stripePromise = loadStripe(config.stripeConfig.pubKey);
@@ -158,9 +159,9 @@ class App extends Component {
                   {/* Routes */}
                   <div className={"app-container"}>
                     <Route exact path={"/"} component={HomePage} />
-                    {/*<Route path={"/profile"} component={() => (*/}
-                    {/*//  TODO: add a Profile component*/}
-                    {/*)} />*/}
+                    <Route path={"/profile"} component={() => (
+                      <ProfilePage user={user} />
+                    )} />
                   </div>
                 </main>
               </ThemeProvider>
