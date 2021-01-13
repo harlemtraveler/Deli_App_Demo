@@ -243,9 +243,12 @@ export default function Product ({ product }) {
 
   return (
     <UserContext.Consumer>
-      {({ user }) => {
-        const isProductOwner = user && user.attributes.sub === product.owner;
-        const isEmailVerified = user && user.email_verified;
+      {/* TODO: remove the "user" obj from UserContext destructuring below */}
+      {/*   AND all invoked instances of "user" in this file and within child components */}
+      {({ user, userAttributes }) => {
+        const isProductOwner = userAttributes && userAttributes.sub === product.owner;
+        // const isEmailVerified = user && user.email_verified;
+        const isEmailVerified = userAttributes && userAttributes.email_verified;
 
         return (
           <>
@@ -328,7 +331,7 @@ export default function Product ({ product }) {
                 {/*    })}*/}
                 {/*  />*/}
                 {/*</IconButton>*/}
-                <Checkout product={product} user={user} />
+                <Checkout product={product} user={user} userAttributes={userAttributes} />
                 <IconButton
                   aria-label={'show more'}
                   aria-expanded={expanded}

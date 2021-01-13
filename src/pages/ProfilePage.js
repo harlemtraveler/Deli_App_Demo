@@ -51,20 +51,20 @@ const getUser = `
 
 class ProfilePage extends Component {
   state = {
-    email: this.props.user && this.props.user.attributes.email,
+    email: this.props.userAttributes && this.props.userAttributes.email,
     emailDialog: false,
     verificationCode: '',
     verificationForm: false,
     orders: [],
     columns: [
       { prop: 'name', width: '150' },
-      { prop: 'value', width: '335' },
+      { prop: 'value', width: '330' },
       {
         prop: 'tag',
         width: '150',
         render: row => {
           if (row.name === 'Email') {
-            const emailVerified = this.props.user.attributes.email_verified;
+            const emailVerified = this.props.userAttributes.email_verified;
             return emailVerified ? <Tag type={'success'}>Verified</Tag> : <Tag type={'danger'}>Unverified</Tag>;
           }
         }
@@ -102,6 +102,9 @@ class ProfilePage extends Component {
   };
 
   componentDidMount() {
+    if (this.props.userAttributes) {
+      this.getUserOrders(this.props.userAttributes.sub);
+    }
   }
 
   getUserOrders = async userId => {
@@ -204,9 +207,9 @@ class ProfilePage extends Component {
       verificationForm,
       verificationCode
     } = this.state;
-    const { user } = this.props;
+    const { user, userAttributes } = this.props;
 
-    return user && (
+    return userAttributes && (
       <>
         <Tabs activeName={'1'} className={'profile-tabs'}>
           <Tabs.Pane
@@ -225,7 +228,7 @@ class ProfilePage extends Component {
               data={[
                 {
                   name: 'Your ID',
-                  value: user.attributes.sub
+                  value: userAttributes.sub
                 },
                 {
                   name: 'Username',
@@ -233,11 +236,11 @@ class ProfilePage extends Component {
                 },
                 {
                   name: 'Email',
-                  value: user.attributes.email
+                  value: userAttributes.email
                 },
                 {
                   name: 'Phone Number',
-                  value: user.attributes.phone_number
+                  value: userAttributes.phone_number
                 },
                 {
                   name: 'Delete Profile',

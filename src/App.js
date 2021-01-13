@@ -28,7 +28,7 @@ import FormCard from './components/forms/FormCard';
 // ENV Imports
 import config from './config';
 //** Util Imports **//
-import { handleSignIn, handleSignOut, stringToBoolean } from './utils';
+import { handleSignIn, handleSignOut, stringToBoolean, attributesToObject } from './utils';
 
 export const history = createBrowserHistory();
 const stripePromise = loadStripe(config.stripeConfig.pubKey);
@@ -37,6 +37,7 @@ export const UserContext = React.createContext();
 class App extends Component {
   state ={
     user: null,
+    userAttributes: null,
     menuOpen: false,
     expanded: false,
   };
@@ -47,11 +48,23 @@ class App extends Component {
   }
 
   getUserData = async () => {
+    // NOTE: the "Auth.currentAuthenticatedUser()" method ONLY returns the attributes from ...
+    // when account was originally created!
     const user = await Auth.currentAuthenticatedUser();
     user
-      ? this.setState({ user })
+      ? this.setState({ user }, () => this.getUserAttributes(this.state.user))
       : this.setState({ user: null });
     console.log(this.state.user);
+  };
+
+  getUserAttributes = async authUserData => {
+    // NOTE: we use the "Auth.userAttributes()" to obtain CURRENT user attr
+    // i.e. after a user updates their email, phone, etc.
+    const attributeArr = await Auth.userAttributes(authUserData);
+    const attributesObj = await attributesToObject(attributeArr);
+    this.setState({ userAttributes: attributesObj });
+    console.log(attributeArr);
+    console.log(attributesObj);
   };
 
   onHubCapsule = capsule => {
@@ -114,14 +127,14 @@ class App extends Component {
   };
 
   render() {
-    const { user, menuOpen } = this.state;
+    const { user, userAttributes, menuOpen } = this.state;
     const { classes } = this.props;
 
     return !user ? (
       <Authenticator theme={theme} />
     ) : (
       <Elements stripe={stripePromise}>
-        <UserContext.Provider value={{ user }}>
+        <UserContext.Provider value={{ user, userAttributes }}>
           <Router history={history}>
             <>
               <ThemeProvider theme={themeFont}>
@@ -160,7 +173,7 @@ class App extends Component {
                   <div className={"app-container"}>
                     <Route exact path={"/"} component={HomePage} />
                     <Route path={"/profile"} component={() => (
-                      <ProfilePage user={user} />
+                      <ProfilePage user={user} userAttributes={userAttributes} />
                     )} />
                   </div>
                 </main>

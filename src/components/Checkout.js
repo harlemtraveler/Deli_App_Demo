@@ -63,7 +63,7 @@ const awsconfig = {
 
 const ses = new AWS.SES(awsconfig);
 
-const Checkout = ({ product, user }) => {
+const Checkout = ({ product, user, userAttributes }) => {
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -146,8 +146,8 @@ const Checkout = ({ product, user }) => {
               country: 'US',
               postal_code: ''
             },
-            name: user.attributes.sub,
-            email: user.attributes.email
+            name: userAttributes.sub,
+            email: userAttributes.email
           }
         },
         shipping: {
@@ -165,13 +165,14 @@ const Checkout = ({ product, user }) => {
           tracking_number: shipping.tracking_number
         },
         email: {
-          customerEmail: user.attributes.email,
+          customerEmail: userAttributes.email,
           ownerEmail,
           delivery: product.delivery
         },
-        receipt_email: user.attributes.email,
+        receipt_email: userAttributes.email,
         customer: {
-          id: user.attributes.sub,
+          id: userAttributes.sub,
+          // TODO: Go into the Cognito and see if possible to config user attributes to include phone number
           phone: '18666666666'
         }
       };
@@ -207,7 +208,7 @@ const Checkout = ({ product, user }) => {
 
           if (status === 'succeeded') {
             const input = {
-              orderUserId: user.attributes.sub,
+              orderUserId: userAttributes.sub,
               orderProductId: product.id,
               deliveryAddress: {
                 city: body.shipping.address.city,
