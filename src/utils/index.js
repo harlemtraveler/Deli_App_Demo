@@ -117,3 +117,22 @@ export const getOwnerEmail = async ownerId => {
     console.error(`[!] Error fetching product owner's email ${ownerId}`, err);
   }
 };
+
+/***************************************************
+ * Convert Amplify User Attribute Array to Objects *
+ ***************************************************/
+export const attributesToObject = async (attributes) => {
+  const obj = {};
+  if (attributes) {
+    attributes.map(attribute => {
+      if (attribute.Value === 'true') {
+        obj[attribute.Name] = true;
+      } else if (attribute.Value === 'false') {
+        obj[attribute.Name] = false;
+      } else {
+        obj[attribute.Name] = attribute.Value;
+      }
+    });
+  }
+  return obj;
+}
