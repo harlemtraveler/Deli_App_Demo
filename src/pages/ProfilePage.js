@@ -16,6 +16,7 @@ import {
 } from 'element-react';
 import { convertCentsToDollars, formatDateToISO, formatOrderDate, formatProductDate } from '../utils';
 import Error from '../components/Error';
+import NewProductForm from "../components/product_components/NewProductForm";
 
 const getUser = `
   query GetUser($id: ID!) {
@@ -291,6 +292,20 @@ class ProfilePage extends Component {
                 </Card>
               </div>
             ))}
+          </Tabs.Pane>
+
+          <Tabs.Pane
+            name={'3'}
+            label={
+              <>
+                <Icon name={'menu'} className={'icon'} />
+                Add New Menu Items
+              </>
+            }
+          >
+            {/*<h2 className={'header'}>Add New Menu Items</h2>*/}
+
+            <NewProductForm />
           </Tabs.Pane>
         </Tabs>
 
