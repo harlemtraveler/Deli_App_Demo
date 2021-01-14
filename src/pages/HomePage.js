@@ -7,6 +7,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import { makeStyles } from "@material-ui/core";
 // Component Imports
 import Main from "../components/layout/Main";
+import Search from "../components/search/Search";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -23,7 +24,7 @@ export default function HomePage() {
         <h1>Deli App</h1>
 
         <Grid container spacing={5} className={classes.mainGrid}>
-          <Main title={"Main Content Component"} />
+          <Main title={"Menu"} />
         </Grid>
       </main>
     </>

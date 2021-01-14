@@ -121,6 +121,8 @@ export const getOwnerEmail = async ownerId => {
 /***************************************************
  * Convert Amplify User Attribute Array to Objects *
  ***************************************************/
+// ref from aws-amplify src code. See below url:
+//  https://github.com/aws-amplify/amplify-js/blob/a047ce73/packages/auth/src/Auth.ts#L1930
 export const attributesToObject = async (attributes) => {
   const obj = {};
   if (attributes) {

@@ -63,8 +63,8 @@ class App extends Component {
     const attributeArr = await Auth.userAttributes(authUserData);
     const attributesObj = await attributesToObject(attributeArr);
     this.setState({ userAttributes: attributesObj });
-    console.log(attributeArr);
-    console.log(attributesObj);
+    // console.log(attributeArr);
+    // console.log(attributesObj);
   };
 
   onHubCapsule = capsule => {
@@ -174,6 +174,9 @@ class App extends Component {
                     <Route exact path={"/"} component={HomePage} />
                     <Route path={"/profile"} component={() => (
                       <ProfilePage user={user} userAttributes={userAttributes} />
+                    )} />
+                    <Route path={"/order-history"} component={() => (
+                      <ProfilePage user={user} userAttributes={userAttributes} currentTab={'2'} />
                     )} />
                   </div>
                 </main>

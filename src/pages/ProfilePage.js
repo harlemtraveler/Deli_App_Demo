@@ -207,11 +207,12 @@ class ProfilePage extends Component {
       verificationForm,
       verificationCode
     } = this.state;
-    const { user, userAttributes } = this.props;
+    const { user, userAttributes, currentTab } = this.props;
 
     return userAttributes && (
       <>
-        <Tabs activeName={'1'} className={'profile-tabs'}>
+        {/*<Tabs activeName={'1'} className={'profile-tabs'}>*/}
+        <Tabs activeName={`${currentTab || '1'}`} className={'profile-tabs'}>
           <Tabs.Pane
             name={'1'}
             label={

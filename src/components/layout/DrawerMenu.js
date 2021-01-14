@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 //** MaterialUI Component Imports **//
 import List from "@material-ui/core/List";
 import Drawer from "@material-ui/core/Drawer";
@@ -58,7 +59,7 @@ export default function DrawerMenu (props) {
           <List>
 
             {/* Store Homepage */}
-            <ListItem button>
+            <ListItem button component={Link} to={'/'}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -76,8 +77,9 @@ export default function DrawerMenu (props) {
             <Collapse in={expanded} timeout={"auto"} unmountOnExit>
               <List>
 
+                {/* TODO: update the list item Link paths to display Menu filtered by product tags */}
                 {/* sub-menu - Beverages */}
-                <ListItem button className={classes.nested}>
+                <ListItem button component={Link} to={'/'} className={classes.nested}>
                   <ListItemIcon>
                     <EmojiFoodBeverageIcon />
                   </ListItemIcon>
@@ -85,7 +87,7 @@ export default function DrawerMenu (props) {
                 </ListItem>
 
                 {/* sub-menu - Entrees */}
-                <ListItem button className={classes.nested}>
+                <ListItem button component={Link} to={'/'} className={classes.nested}>
                   <ListItemIcon>
                     <FastfoodIcon />
                   </ListItemIcon>
@@ -96,7 +98,7 @@ export default function DrawerMenu (props) {
             </Collapse>
 
             {/* Past Orders */}
-            <ListItem button>
+            <ListItem button component={Link} to={'/order-history'}>
               <ListItemIcon>
                 <HistoryIcon />
               </ListItemIcon>

@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core/colors';
 // Material UI Icons
 import PaymentRoundedIcon from '@material-ui/icons/PaymentRounded';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import AttachMoneyRoundedIcon from '@material-ui/icons/AttachMoneyRounded';
 import MonetizationOnRoundedIcon from '@material-ui/icons/MonetizationOnRounded';
 import CancelPresentationRoundedIcon from '@material-ui/icons/CancelPresentationRounded';
@@ -25,6 +26,7 @@ import {
   Button,
   Divider,
   TextField,
+  IconButton,
   DialogTitle,
   FormControl,
   DialogContent,
@@ -279,14 +281,18 @@ const Checkout = ({ product, user, userAttributes }) => {
   return (
     <div className={'card-container'}>
       <ThemeProvider theme={theme}>
-        <Button
-          color={'primary'}
-          variant={'contained'}
-          onClick={toggleDialog}
-          startIcon={<MonetizationOnRoundedIcon style={{ color: '#fff' }} />}
-        >
-          {` $${convertCentsToDollars(product.price)}`}
-        </Button>
+        {/*<Button*/}
+        {/*  color={'primary'}*/}
+        {/*  variant={'contained'}*/}
+        {/*  onClick={toggleDialog}*/}
+        {/*  // startIcon={<MonetizationOnRoundedIcon style={{ color: '#fff' }} />}*/}
+        {/*  startIcon={<AddShoppingCartIcon/>}*/}
+        {/*>*/}
+        {/*  /!*{` $${convertCentsToDollars(product.price)}`}*!/*/}
+        {/*</Button>*/}
+        <IconButton color={'primary'} onClick={toggleDialog}>
+          <AddShoppingCartIcon/>
+        </IconButton>
       </ThemeProvider>
 
       <Dialog

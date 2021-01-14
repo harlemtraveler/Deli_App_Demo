@@ -14,6 +14,10 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 import NewProduct from "../product_components/NewProduct";
 import ProductList from "../product_components/ProductList";
+import {withStyles} from "@material-ui/core/styles";
+import {InputBase, Paper} from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
+// Component Imports
 
 const searchProducts = /* GraphQL */ `
   query SearchProducts(
@@ -60,7 +64,7 @@ const searchProducts = /* GraphQL */ `
 
 class Main extends Component {
   state = {
-    searchTerm: "",
+    searchTerm: '',
     searchResults: [],
     isSearching: false
   };
@@ -103,7 +107,7 @@ class Main extends Component {
   };
 
   render() {
-    const { title } = this.props;
+    const { title, classes } = this.props;
 
     return (
       <Grid item xs={12} md={12}>
@@ -111,42 +115,44 @@ class Main extends Component {
           {title}
         </Typography>
 
-        <Divider />
-
-        <FormControl fullWidth>
-          <Input
-            id={"menu-search"}
-            name={"searchTerm"}
-            label={"Search Menu Items"}
+        <Paper component={'form'} className={classes.root}>
+          <InputBase
+            id={'menu-search'}
+            name={'searchTerm'}
             value={this.state.searchTerm}
-            placeholder={"Search Menu Items..."}
             onChange={this.handleSearchChange}
-            endAdornment={
-              <InputAdornment position={"end"}>
-                <IconButton color={"inherit"} onClick={this.handleClearSearch}>
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
-            }
+            className={classes.input}
+            placeholder={'Search our menu...'}
+            inputProps={{ 'aria-label': 'Search our menu items' }}
           />
-          <Button
-            variant={"contained"}
-            onClick={this.handleSearch}
-            loading={this.state.isSearching}
+          <IconButton
+            aria-label={'clear'}
+            className={classes.icon}
+            onClick={this.handleClearSearch}
           >
-            Search
-          </Button>
-        </FormControl>
+            <ClearIcon />
+          </IconButton>
+          <IconButton
+            type={'submit'}
+            aria-label={'search'}
+            className={classes.icon}
+            onClick={this.handleSearch}
+          >
+            <SearchIcon />
+          </IconButton>
+        </Paper>
 
         <Divider />
 
-        <NewProduct
-          handleSearch={this.handleSearch}
-          searchTerm={this.state.searchTerm}
-          isSearching={this.state.isSearching}
-          handleClearSearch={this.handleClearSearch}
-          handleSearchChange={this.handleSearchChange}
-        />
+        {/* TODO: move the NewProduct component to the Profile page... */}
+        {/*   and only accessible to the store's admin/owner */}
+        {/*<NewProduct*/}
+        {/*  handleSearch={this.handleSearch}*/}
+        {/*  searchTerm={this.state.searchTerm}*/}
+        {/*  isSearching={this.state.isSearching}*/}
+        {/*  handleClearSearch={this.handleClearSearch}*/}
+        {/*  handleSearchChange={this.handleSearchChange}*/}
+        {/*/>*/}
 
         <ProductList searchResults={this.state.searchResults} />
       </Grid>
@@ -154,4 +160,25 @@ class Main extends Component {
   }
 }
 
-export default Main;
+const styles = theme => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+    margin: '5px auto 20px auto'
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
+});
+
+export default withStyles(styles)(Main);

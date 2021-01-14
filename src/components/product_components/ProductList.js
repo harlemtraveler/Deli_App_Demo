@@ -1,17 +1,13 @@
 import React,{useState} from 'react';
 import { Link } from "react-router-dom";
-import { graphqlOperation } from "aws-amplify";
-import { Connect } from "aws-amplify-react";
-import { S3Image } from "aws-amplify-react";
-import { AmplifyS3Image } from "@aws-amplify/ui-react";
-import Card from '@material-ui/core/Card';
-import CheckIcon from '@material-ui/icons/Check';
-import Chip from '@material-ui/core/Chip';
-import DescriptionIcon from '@material-ui/icons/Description';
-import Grid from '@material-ui/core/Grid';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import { Loading } from "element-react";
+import { Connect } from "aws-amplify-react";
+import { graphqlOperation } from "aws-amplify";
+// Material UI Imports
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+// Component Imports
 import Error from "../Error";
 import Product from "./Product";
 
@@ -51,8 +47,24 @@ const listProducts = /* GraphQL */ `
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(0.5),
+    },
+  },
+  grid: {
+    padding: theme.spacing(2),
+    margin: 'auto',
+  },
+}));
+
 const ProductList = ({ searchResults }) => {
   const [link, setLink] = useState("");
+    const classes = useStyles();
 
   return (
     <Connect query={graphqlOperation(listProducts)}>
@@ -65,12 +77,17 @@ const ProductList = ({ searchResults }) => {
 
         return (
           <>
-            <Grid container spacing={3} justify={"center"}>
+            <Grid container spacing={3} justify={"center"} className={classes.grid}>
 
               {products.map(product => (
                 <Grid item xs={12} sm={6} md={4} lg={3}>
                   {console.log(product)}
                   <Product key={product.id} product={product} />
+                  {product.tags.map(tag => (
+                    <div className={classes.root}>
+                      <Chip size={'small'} label={tag} color={'primary'} key={tag}/>
+                    </div>
+                  ))}
                 </Grid>
               ))}
 

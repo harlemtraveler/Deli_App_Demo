@@ -12,6 +12,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AppBar from "@material-ui/core/AppBar";
 import {Auth} from "aws-amplify";
 import FormCard from "../forms/FormCard";
+import Search from "../search/Search";
 
 export default function AppbarMenu (props) {
   const { classes, title, handleDrawerOpen, open, user, position, shiftClass, handleSignout } = props;
@@ -49,6 +50,7 @@ export default function AppbarMenu (props) {
           <IconButton>
             <SearchIcon />
           </IconButton>
+          {/*<Search />*/}
 
           {/*{user ? (*/}
           {/*  <Button*/}

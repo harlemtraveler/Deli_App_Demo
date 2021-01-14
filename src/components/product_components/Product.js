@@ -301,7 +301,7 @@ export default function Product ({ product }) {
               <CardContent>
                 <Typography variant={'body1'}>
                   <Typography paragraph className={classes.responsive}>
-                    {product.description}
+                    {`$${convertCentsToDollars(product.price)}`}
                   </Typography>
                 </Typography>
               </CardContent>
@@ -347,20 +347,18 @@ export default function Product ({ product }) {
                 <CardContent>
                   <Typography>
                     <Typography paragraph>
-                      Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                      Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed
-                      posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
+                      {product.description}
                     </Typography>
-                    <Typography paragraph>
-                      Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                      Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed
-                      posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
-                    </Typography>
-                    <Typography paragraph>
-                      Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                      Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed
-                      posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
-                    </Typography>
+                    {/*<Typography paragraph>*/}
+                    {/*  Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.*/}
+                    {/*  Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed*/}
+                    {/*  posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.*/}
+                    {/*</Typography>*/}
+                    {/*<Typography paragraph>*/}
+                    {/*  Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.*/}
+                    {/*  Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed*/}
+                    {/*  posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.*/}
+                    {/*</Typography>*/}
                   </Typography>
                 </CardContent>
               </Collapse>
