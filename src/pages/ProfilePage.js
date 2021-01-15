@@ -17,6 +17,7 @@ import {
 import { convertCentsToDollars, formatDateToISO, formatOrderDate, formatProductDate } from '../utils';
 import Error from '../components/Error';
 import NewProductForm from "../components/product_components/NewProductForm";
+import config from '../config';
 
 const getUser = `
   query GetUser($id: ID!) {
@@ -199,6 +200,8 @@ class ProfilePage extends Component {
     return formatOrderDate(formatDate);
   };
 
+  // isStoreOwner = () => {};
+
   render() {
     const {
       email,
@@ -209,6 +212,8 @@ class ProfilePage extends Component {
       verificationCode
     } = this.state;
     const { user, userAttributes, currentTab } = this.props;
+
+    const isStoreOwner = userAttributes && userAttributes.sub === config.userCred.adminId;
 
     return userAttributes && (
       <>
@@ -302,6 +307,7 @@ class ProfilePage extends Component {
                 Add New Menu Items
               </>
             }
+            disabled={!isStoreOwner}
           >
             {/*<h2 className={'header'}>Add New Menu Items</h2>*/}
 

@@ -35,5 +35,11 @@ export default {
      * Stripe Publishable Key (dev credentials)
      */
     pubKey: process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY,
-  }
+  },
+  userCred: {
+    /**
+     * Admin Cognito User Attr - "sub"
+     */
+    adminId: process.env.REACT_APP_ADMIN_USER_ID,
+  },
 }

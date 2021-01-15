@@ -16,7 +16,7 @@ const ses = new AWS.SES(awsconfig);
 export const emailHandler = async chargeObj => {
   const { currency, amount, description } = chargeObj;
   const {
-    charge: {
+    email: {
       delivery,
       ownerEmail,
       customerEmail
@@ -44,7 +44,8 @@ export const emailHandler = async chargeObj => {
     Source: awsconfig.adminEmail,
     ReturnPath: awsconfig.adminEmail,
     Destination: {
-      ToAddresses: [awsconfig.adminEmail]
+      // ToAddresses: [awsconfig.adminEmail]
+      ToAddresses: [customerEmail]
     },
     Message: {
       Subject: {

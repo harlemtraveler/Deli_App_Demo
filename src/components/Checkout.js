@@ -63,7 +63,7 @@ const awsconfig = {
   adminEmail: config.awsConfig.adminEmail,
 };
 
-const ses = new AWS.SES(awsconfig);
+// const ses = new AWS.SES(awsconfig);
 
 const Checkout = ({ product, user, userAttributes }) => {
   const [error, setError] = useState(null);
@@ -239,11 +239,13 @@ const Checkout = ({ product, user, userAttributes }) => {
                 duration: 5000,
                 showClose: true
               });
-            }, 3000);
+            }, 5000);
           }
 
           if (!error) {
             // TODO: remove the "console.log()" below in prod
+            console.log('[!] LOOK AT THIS VALUE FOR body BELOW:');
+            console.log(body);
             console.log({ body });
             const sendEmail = await emailHandler(body);
             sendEmail ? console.log('[+] Email handler success!') : console.error(sendEmail);
